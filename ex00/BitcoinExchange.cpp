@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:34 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/01 14:21:59 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/04 09:09:22 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,21 +98,32 @@ bool BitcoinExchange::_parseValue(const std::string &s, double &out) const {
 }
 
 bool BitcoinExchange::_parseDate(const std::string &input) const {
-	if (input.size() != 10) {
-		std::cerr << "Error: bad input => " << input << std::endl;
+	int year;
+	int month;
+	int day;
+	struct tm t_date;
+
+	memset(&t_date, 0, sizeof(t_date));	
+	if (input.size() != 10) 
 		return (false);
-	}
-	if (input[4] != '-' || input[7] != '-') {
-		std::cerr << "Error: bad input => " << input << std::endl;
+	if (input[4] != '-' || input[7] != '-') 
 		return (false);
-	}
 	for (int i = 0; i < input.size(); i++) {
-		if (!std::isdigit(input[i]) && (i != 4 || i != 7)) {
-			std::cerr << "Error: bad input => " << input << std::endl;
+		if (!std::isdigit(input[i]) && (i != 4 && i != 7)) 
 			return (false);
-		}
-	}
-	
+	}	
+
+	year = std::atoi(input.substr(0, 4).c_str());
+	month = std::atoi(input.substr(5, 2).c_str());
+	day = std::atoi(input.substr(8).c_str());
+	t_date.tm_year = year - 1900;
+	t_date.tm_mon = month - 1;
+	t_date.tm_mday = day;
+	if (mktime(&t_date) == -1)
+		return (false);
+	if (t_date.tm_year != year - 1900 || t_date.tm_mon != month - 1 || t_date.tm_mday != day)
+		return (false);
+	return (true);
 }
 
 void BitcoinExchange::_executeLine(const std::string &input) const {
@@ -124,14 +135,16 @@ void BitcoinExchange::_executeLine(const std::string &input) const {
 	trim_input = this->_strtrim(input);
 	if (trim_input.empty())
 		return ;
+	if (!this->_parseDate(trim_input)) {
+		std::cerr << "Error: bad input => " << input << std::endl;
+		return ; 
+	}
 	if (!this->_splitByBar(trim_input, date, val_str)) {
 		std::cerr << "Error: bad input => " << input << std::endl;
 		return ;
 	}
 	if (!this->_parseValue(val_str, val))
 		return ;
-	
-	
 }
 
 void BitcoinExchange::_run(const std::string &filename) const {
