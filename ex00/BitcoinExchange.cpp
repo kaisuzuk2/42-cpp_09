@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:34 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/04 09:09:22 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/04 10:41:18 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ const std::string BitcoinExchange::kName = "data.csv";
 const std::string BitcoinExchange::kHeader = "date | value";
 
 BitcoinExchange::BitcoinExchange() {
-	this->_loadDatabase(kName); // ### TODO: 例外処理
+	this->_loadDatabase(kName); 
 }
 
 BitcoinExchange::BitcoinExchange(const BitcoinExchange &other) {
@@ -82,7 +82,7 @@ bool BitcoinExchange::_parseValue(const std::string &s, double &out) const {
 	char *endptr;
 
 	out = std::strtod(s.c_str(), &endptr);
-	if (endptr == s.c_str() || endptr != '\0' || std::isnan(out)) {
+	if (endptr == s.c_str() || *endptr != '\0' || std::isnan(out)) {
 		std::cerr << "Error: not a number." << std::endl;
 		return (false);
 	}
@@ -131,20 +131,36 @@ void BitcoinExchange::_executeLine(const std::string &input) const {
 	std::string val_str;
 	double val;
 	std::string trim_input;
+	std::map<std::string, double>::const_iterator it;
 
 	trim_input = this->_strtrim(input);
 	if (trim_input.empty())
 		return ;
-	if (!this->_parseDate(trim_input)) {
-		std::cerr << "Error: bad input => " << input << std::endl;
-		return ; 
-	}
 	if (!this->_splitByBar(trim_input, date, val_str)) {
 		std::cerr << "Error: bad input => " << input << std::endl;
 		return ;
 	}
+	if (!this->_parseDate(date)) {
+		std::cerr << "Error: bad input => " << input << std::endl;
+		return ; 
+	}
 	if (!this->_parseValue(val_str, val))
 		return ;
+
+	it = this->_map.lower_bound(date);
+	if (it == this->_map.end()) {
+		std::cerr << "Error: bad input => " << input << std::endl;
+	}
+	if (it->first == date) {
+		std::cout << date << " => " << val << " = " << val * it->second << std::endl;
+		return ;
+	}
+	if (it == this->_map.begin()) {
+		std::cerr << "Error: bad input => " << input << std::endl;
+		return ;
+	}
+	--it;
+	std::cout << date << " => " << val << " = " << val * it->second << std::endl;
 }
 
 void BitcoinExchange::_run(const std::string &filename) const {

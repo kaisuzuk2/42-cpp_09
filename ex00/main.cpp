@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 09:58:31 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/01 13:41:07 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/04 10:41:54 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,10 @@ int main(int argc, char *argv[]) {
 		std::cerr << "Usage: ./btc [file]" << std::endl;
 		return (1);
 	}		
-	
+	try {
+		BitcoinExchange btc;
+		btc._run(argv[1]);
+	} catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
 }

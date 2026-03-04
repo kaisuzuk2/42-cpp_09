@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:30 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/04 08:59:34 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/04 10:21:58 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class BitcoinExchange {
 
 		class InvalidHeaderException: public std::exception {
 			const char *what() const throw();
-		}
+		};
 };
 
 
