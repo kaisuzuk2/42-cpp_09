@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 07:49:51 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/05 10:59:56 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/12 11:11:59 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@ static bool isOperator(const char c) {
 }
 
 static long int safe_add(long int a, long int b) {
-    if (b > 0 && a > LONG_MAX - b)
+    if (b > 0 && a > std::numeric_limits<long>::max() - b)
         throw std::runtime_error("Error: over flow");
-    if (b < 0 && a < LONG_MIN - b)
+    if (b < 0 && a < std::numeric_limits<long>::min() - b)
         throw std::runtime_error("Error: over flow");
     return (a + b);
 }
 
 static long int safe_sub(long int a, long int b) {
-    if (b == LONG_MIN)
+    if (b == std::numeric_limits<long>::min())
         throw std::runtime_error("Error: over flow");
     return (safe_add(a, -b));
 }
@@ -33,31 +33,31 @@ static long int safe_sub(long int a, long int b) {
 static long int safe_div(long int a, long int b) {
     if (b == 0)
         throw std::runtime_error("Error");
-    if (a == LONG_MIN && b == -1)
+    if (a == std::numeric_limits<long>::min() && b == -1)
         throw std::runtime_error("Error: over flow");
     return (a / b);
 }
 
 static long int safe_mul(long int a, long int b) {
-    if (a == -1 && b == LONG_MIN)
+    if (a == -1 && b == std::numeric_limits<long>::min())
         throw std::runtime_error("Error: over flow");
-    if (b == -1 && a == LONG_MIN)
+    if (b == -1 && a == std::numeric_limits<long>::min())
         throw std::runtime_error("Error: over flow");
     
     if (a > 0) {
         if (b > 0) {
-            if (a > LONG_MAX / b)
+            if (a > std::numeric_limits<long>::max() / b)
                 throw std::runtime_error("Error: over flow");
         } else {
-            if (b < LONG_MIN / a)
+            if (b < std::numeric_limits<long>::min() / a)
                 throw std::runtime_error("Error: over flow");
         }
     } else {
         if (b > 0) {
-            if (a < LONG_MIN / b)
+            if (a < std::numeric_limits<long>::min() / b)
                 throw std::runtime_error("Error: over flow");
         } else {
-            if (a < LONG_MAX / b)
+            if (a < std::numeric_limits<long>::max() / b)
                 throw std::runtime_error("Error: over flow");
         }
     }
