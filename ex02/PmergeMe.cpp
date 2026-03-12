@@ -213,7 +213,6 @@ void PmergeMe(const int *arr, const size_t size) {
     unsigned long listEnd = getTime();
     std::cout << "After: ";
     printData(v.begin(), v.end());
-    printData(l.begin(), l.end());
     std::cout << "Time to process a range of " << size 
         <<  " elements with std::vector : " 
         << vecEnd - vecStart 
@@ -239,3 +238,4 @@ a a
 
 b a a 
     b
+*/
