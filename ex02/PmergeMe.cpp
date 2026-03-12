@@ -1,14 +1,14 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        :::      ::::::::   */
-// /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
-// /*                                                    +:+ +:+         +:+     */
-// /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
-// /*                                                +#+#+#+#+#+   +#+           */
-// /*   Created: 2026/03/07 12:33:29 by kaisuzuk          #+#    #+#             */
-// /*   Updated: 2026/03/11 16:18:10 by kaisuzuk         ###   ########.fr       */
-// /*                                                                            */
-// /* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PmergeMe.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
+/*   Updated: 2026/03/13 08:29:04 by kaisuzuk         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
@@ -18,6 +18,7 @@ unsigned long getTime() {
     return (t.tv_sec * 1000000 + t.tv_usec);
 }
 
+
 size_t jacobsthal(size_t n) {
     if (n == 0)
         return (0);
@@ -26,182 +27,161 @@ size_t jacobsthal(size_t n) {
     return (jacobsthal(n - 1) + 2 * jacobsthal(n - 2));
 }
 
-//************************************************************* */
-//                      vector
-//************************************************************* */
+bool cmpNode(Node *a, Node *b) {
+    return (*a < *b);
+}
 
-void sort(std::vector<int> &v) {
-    std::vector< std::pair<int, int> > pairs;
-    bool hasStraggler = false;
-    int straggler = 0;
-
-    if (v.size() <= 1)
-        return ;
-    for (size_t i = 0; i + 1 < v.size(); i += 2) 
-        pairs.push_back(std::make_pair(v[i], v[i + 1]));
-    if (v.size() % 2 != 0) {
-        hasStraggler = true;
-        straggler = v[v.size() - 1];
-    }
-
-    for (size_t i = 0; i < pairs.size(); i++) {
-        if (pairs[i].first > pairs[i].second) 
-            std::swap(pairs[i].first, pairs[i].second);
-    }
-
-    std::vector<int> large;
-    for (size_t i = 0; i < pairs.size(); i++) {
-        large.push_back(pairs[i].second);
-    }
-    sort(large);
-    std::vector<int> mainChain = large;
-
-    std::vector< std::pair<int, int> > pend;
-    std::vector<int> pendLarge;
-    std::vector<int> small;
-    for (size_t i = 0; i < pairs.size(); i++) {
-        pend.push_back(pairs[i]);
-        pendLarge.push_back(pairs[i].second);
-    }
-    for (size_t i = 0; i < mainChain.size(); i++) {
-        std::vector<int>::iterator pos = std::find(pendLarge.begin(), pendLarge.end(), mainChain[i]);
-        int idx = pos - pendLarge.begin();
-        int val = pend[idx].first;
-        small.push_back(val);
-    }
-
+std::vector<int> makeOrder(size_t size) {
     std::vector<int> order;
     size_t k = 1;
-    while (jacobsthal(k) < pend.size()) {
+    while (jacobsthal(k) < size) {
         size_t j = jacobsthal(k);
-        size_t prev = jacobsthal(k - 1);
-        for (size_t idx = j; idx > prev; --idx) {
-            size_t pos = idx - 1;
-            order.push_back(pos);
-        }
+        size_t prev = jacobsthal(k -1);
+        for (size_t idx = j; idx > prev; --idx)
+            order.push_back(idx - 1);
         k++;
     }
-    for (size_t i = order.size(); i < pend.size(); i++)
+    for (size_t i = order.size(); i < size; i++) 
         order.push_back(i);
+    return (order);
+}
 
-    for (size_t i = 0; i < small.size(); i++) {
-        std::vector<int>::iterator pos = std::lower_bound(mainChain.begin(), std::find(mainChain.begin(), mainChain.end(), large[order[i]]), small[order[i]]);
-        mainChain.insert(pos, small[order[i]]);
+/************************************************************** */
+//                     VECTOR
+/************************************************************** */
+
+void sortInternal(std::vector<Node *> &v) {
+    std::vector<Node *> winners;
+    bool hasStraggler = false;
+    Node *straggler;
+    std::vector<Node *> mainChain;
+    
+    if (v.size() <= 1)
+        return ;
+    for (size_t i = 0; i + 1 < v.size(); i += 2) {
+        if (*v[i] < *v[i + 1]) {
+            v[i + 1]->losers.push_back(v[i]);
+            winners.push_back(v[i + 1]);
+        } else {
+            v[i]->losers.push_back(v[i + 1]);
+            winners.push_back(v[i]);
+        }
+    }
+    if (v.size() % 2 != 0) {
+        hasStraggler = true;
+        straggler = v.back();
+    }
+
+    sortInternal(winners);
+    mainChain = winners;
+    
+    std::vector<int> order = makeOrder(winners.size());
+    
+    for (size_t i = 0; i < winners.size(); i++) {
+        Node *toInsert = winners[order[i]]->losers.back();
+        if (toInsert == nullptr)
+            continue ;
+        winners[order[i]]->losers.pop_back();
+        std::vector<Node *>::iterator bound = mainChain.begin() + order[i] + i;
+        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNode);
+        mainChain.insert(pos, toInsert);
     }
 
     if (hasStraggler) {
-        std::vector<int>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler);
+        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNode);
         mainChain.insert(pos, straggler);
     }
     v = mainChain;
 }
 
-//************************************************************* */
-//                      list
-//************************************************************* */
+void sort(std::vector<int> &v) {
+    std::vector<Node> nodes;
+    std::vector<Node *>nodesPtr;
+    std::vector<int> res;
 
-std::list<std::pair<int, int> >::iterator getPairAt(
-    std::list<std::pair<int, int> > &pairs, size_t index
-) {
-    std::list<std::pair<int, int> >::iterator it = pairs.begin();
-    std::advance(it, index);
-    return (it);
+    nodes.reserve(v.size());
+    nodesPtr.reserve(v.size());
+
+    for (size_t i = 0; i < v.size(); i++) 
+        nodes.push_back(Node(v[i]));
+    for (size_t i = 0; i < nodes.size(); i++) 
+        nodesPtr.push_back(&nodes[i]);
+    sortInternal(nodesPtr);
+    for (size_t i = 0; i < nodesPtr.size(); i++) 
+        res.push_back(nodesPtr[i]->value);
+    v = res;
 }
 
-std::list<int>::iterator getIntAt(std::list<int> &lst, size_t idx) {
-    std::list<int>::iterator it = lst.begin();
-    while (idx > 0 && it != lst.end()) {
-        it++;
-        --idx;
-    }
-    return (it);
-}
+/************************************************************** */
+//                     LIST
+/************************************************************** */
 
-void sort(std::list<int> &l) {
-    std::list<std::pair <int, int> > pairs;
+void sortInternal(std::list<Node *> &l) {
+    std::list<Node *> winners;
     bool hasStraggler = false;
-    int straggler = 0;
+    Node *straggler;
+    std::list<Node *> mainChain;
 
     if (l.size() <= 1)
         return ;
-    
-    std::list<int>::iterator it = l.begin();
+    std::list<Node *>::iterator it = l.begin();
     while (it != l.end()) {
-        int a = *it;
+        Node *a = *it;
         it++;
         if (it == l.end()) {
             hasStraggler = true;
             straggler = a;
             break;
         }
-        int b = *it;
+        Node *b = *it;
         it++;
-        if (a > b)
-            std::swap(a, b);
-        pairs.push_back(std::make_pair(a, b));
-    }
-
-    std::list<int> large;
-    for (std::list<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++) {
-        large.push_back(it->second);
-    }
-    sort(large);
-
-    std::list<int> mainChain = large;
-
-    std::list< std::pair<int, int> > pend;
-    std::list<int> pendLarge;
-    std::list<int> small;
-    for (std::list< std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++) {
-        pend.push_back(*it);
-        pendLarge.push_back(it->second);
-    }   
-    for (std::list<int>::iterator it = mainChain.begin(); it != mainChain.end(); it++) {
-        std::list<int>::iterator pos = std::find(pendLarge.begin(), pendLarge.end(), *it);
-        std::list< std::pair<int, int> >::iterator pit = pend.begin();
-        std::list<int>::iterator lit = pendLarge.begin();
-        while (lit != pos) {
-            pit++;
-            lit++;
+        if (*a < *b) {
+            b->losers.push_back(a);
+            winners.push_back(b);
+        } else {
+            a->losers.push_back(b);
+            winners.push_back(a);
         }
-        small.push_back(pit->first);
     }
+    sortInternal(winners);
+    mainChain = winners;
 
-    std::vector<int> order;
-    size_t k = 1;
-    while (jacobsthal(k) < pairs.size()) {
-        size_t j = jacobsthal(k);
-        size_t prev = jacobsthal(k - 1);
-        for (size_t idx = j; idx > prev; --idx)
-            order.push_back(idx - 1);
-        k++;
-    }
-    for (size_t i = order.size(); i < pairs.size(); i++) 
-        order.push_back(i);
+    std::vector<int> order = makeOrder(winners.size());
 
-    for (size_t i = 0; i < order.size(); i++) {
-        std::list<int>::iterator smallIt = getIntAt(small, order[i]);
-        std::list<int>::iterator largeIt = getIntAt(large, order[i]);
-
-        if (smallIt == small.end() || largeIt == large.end())
+    for (size_t i = 0; i < winners.size(); i++) {
+        std::list<Node *>::iterator winnerIt = std::next(winners.begin(), order[i]);
+        if ((*winnerIt)->losers.empty())
             continue ;
-        std::list<int>::iterator bound = std::find(mainChain.begin(), mainChain.end(), *largeIt);
-        std::list<int>::iterator pos = std::lower_bound(mainChain.begin(), bound, *smallIt);
-        mainChain.insert(pos, *smallIt);
+        Node *toInsert = (*winnerIt)->losers.back();
+        (*winnerIt)->losers.pop_back();
+        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), std::next(mainChain.begin(), order[i] + i), toInsert, cmpNode);
+        mainChain.insert(pos, toInsert);
     }
-    
 
     if (hasStraggler) {
-        std::list<int>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler);
+        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNode);
         mainChain.insert(pos, straggler);
     }
     l = mainChain;
 }
 
+void sort(std::list<int> &l) {
+    std::list<Node> nodes;
+    std::list<Node *> nodesPtr;
+    std::list<int> res;
 
+    for (std::list<int>::iterator it = l.begin(); it != l.end(); it++) 
+        nodes.push_back(*it);
+    for (std::list<Node>::iterator it = nodes.begin(); it != nodes.end(); it++) 
+        nodesPtr.push_back(&(*it));
+    sortInternal(nodesPtr);
+    for (std::list<Node *>::iterator it = nodesPtr.begin(); it != nodesPtr.end(); it++)    
+        res.push_back((*it)->value);
+    l = res;
+}
 
 void PmergeMe(const int *arr, const size_t size) {
-    std::vector <int> v(arr, arr + size);
+    std::vector<int> v(arr, arr + size);
     std::list<int> l(arr, arr + size);
     std::cout << "Before: ";
     printData(arr, arr + size);
@@ -212,7 +192,7 @@ void PmergeMe(const int *arr, const size_t size) {
     sort(l);
     unsigned long listEnd = getTime();
     std::cout << "After: ";
-    printData(v.begin(), v.end());
+    printData(l.begin(), l.end());
     std::cout << "Time to process a range of " << size 
         <<  " elements with std::vector : " 
         << vecEnd - vecStart 
@@ -221,21 +201,22 @@ void PmergeMe(const int *arr, const size_t size) {
         <<  " elements with std::list : " 
         << listEnd - listStart 
         <<" us" << std::endl;
-
 }
 
 /*
+4 3 2 1 
 
-a a b b 
+[4 3] [2 1]
 
-a a  
-b b 
+[4 3] [2 1]
 
-a 
-a
+[4 2]
 
-a a 
+[4]
 
-b a a 
-    b
+2 4
+1 3
+
+1 2 4 
+    3
 */
