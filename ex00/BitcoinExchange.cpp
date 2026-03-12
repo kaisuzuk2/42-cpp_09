@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:34 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/04 10:41:18 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/10 15:07:39 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,9 +148,10 @@ void BitcoinExchange::_executeLine(const std::string &input) const {
 		return ;
 
 	it = this->_map.lower_bound(date);
-	if (it == this->_map.end()) {
-		std::cerr << "Error: bad input => " << input << std::endl;
-	}
+	// if (it == this->_map.end()) {
+	// 	std::cerr << "Error: bad input => " << input << std::endl;
+	// 	return ;
+	// }
 	if (it->first == date) {
 		std::cout << date << " => " << val << " = " << val * it->second << std::endl;
 		return ;

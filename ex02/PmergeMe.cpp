@@ -26,6 +26,10 @@ size_t jacobsthal(size_t n) {
     return (jacobsthal(n - 1) + 2 * jacobsthal(n - 2));
 }
 
+//************************************************************* */
+//                      vector
+//************************************************************* */
+
 void sort(std::vector<int> &v) {
     std::vector< std::pair<int, int> > pairs;
     bool hasStraggler = false;
@@ -91,6 +95,10 @@ void sort(std::vector<int> &v) {
     }
     v = mainChain;
 }
+
+//************************************************************* */
+//                      list
+//************************************************************* */
 
 std::list<std::pair<int, int> >::iterator getPairAt(
     std::list<std::pair<int, int> > &pairs, size_t index
