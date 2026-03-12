@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 09:19:40 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/05 10:56:28 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/12 10:31:42 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,9 +115,6 @@ void test() {
         printInput(input);
         testSec(input);
     }
-
-
-    
 }
 
 int main(int argc, char *argv[]) {
