@@ -224,3 +224,24 @@ void PmergeMe(const int *arr, const size_t size) {
         <<" us" << std::endl;
 
 }
+
+/*
+
+a a a a a a a a a a b b b b b b b b b b b 
+
+a a a a a a a a a a 
+b b b b b b b b b b b  -> 10
+ペアを作って比較します
+a > bとします
+
+a a a a a 
+c c c c c              -> 5
+
+a a 
+d d                    -> 2
+
+
+a
+e                      -> 1
+
+*/
