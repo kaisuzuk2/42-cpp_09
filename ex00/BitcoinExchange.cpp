@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:34 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/12 10:23:14 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 05:22:25 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ bool BitcoinExchange::_parseDate(const std::string &input) const {
 		return (false);
 	if (input[4] != '-' || input[7] != '-') 
 		return (false);
-	for (int i = 0; i < input.size(); i++) {
+	for (size_t i = 0; i < input.size(); i++) {
 		if (!std::isdigit(input[i]) && (i != 4 && i != 7)) 
 			return (false);
 	}	

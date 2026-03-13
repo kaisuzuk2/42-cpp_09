@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 09:19:40 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/12 10:31:42 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 05:23:47 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void printInput(const std::string &input) {
 
 void test() {
     std::string input;
-    long int res;
+    
     {
         header(0, "PDF");
         input = "8 9 * 9 - 9 - 9 - 4 - 1 +";

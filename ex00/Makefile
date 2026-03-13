@@ -6,7 +6,7 @@
 #    By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/04 10:20:20 by kaisuzuk          #+#    #+#              #
-#    Updated: 2026/03/04 10:20:47 by kaisuzuk         ###   ########.fr        #
+#    Updated: 2026/03/14 05:21:21 by kaisuzuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,10 +22,10 @@ OBJS	=	$(SRCS:%.cpp=%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CXX) $(FLAG) -o $(NAME) $(OBJS)
+	$(CXX) $(CXXFLAG) -o $(NAME) $(OBJS)
 
 %.o: %.cpp	
-	$(CXX) $(FLAG) -c $< -o $@
+	$(CXX) $(CXXFLAG) -c $< -o $@
 
 clean:
 	$(RM) $(OBJS)
