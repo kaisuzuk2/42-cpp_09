@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 12:33:27 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/12 14:55:32 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/13 09:00:07 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,6 @@
 #include <algorithm>
 #include <exception>
 #include <sys/time.h>
-
-// struct Node {
-//     int value;
-//     Node *loser;
-
-//     Node(int v): value(v) {}
-//     bool operator<(const Node &other) {
-//         return (this->value < other.value);
-//     }
-// };
 
 struct Node {
     int value;
