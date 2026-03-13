@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/13 08:29:04 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 08:22:18 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,17 @@ size_t jacobsthal(size_t n) {
     return (jacobsthal(n - 1) + 2 * jacobsthal(n - 2));
 }
 
-bool cmpNode(Node *a, Node *b) {
+int vecCount = 0;
+int listCount = 0;
+
+bool cmpNodeVec(Node *a, Node *b) {
+    vecCount++;
     return (*a < *b);
+}
+
+bool cmpNodeList(Node *a, Node *b) {
+    listCount++;
+    return (*a < *b);   
 }
 
 std::vector<int> makeOrder(size_t size) {
@@ -62,9 +71,11 @@ void sortInternal(std::vector<Node *> &v) {
         if (*v[i] < *v[i + 1]) {
             v[i + 1]->losers.push_back(v[i]);
             winners.push_back(v[i + 1]);
+            vecCount++;
         } else {
             v[i]->losers.push_back(v[i + 1]);
             winners.push_back(v[i]);
+            vecCount++;
         }
     }
     if (v.size() % 2 != 0) {
@@ -76,19 +87,23 @@ void sortInternal(std::vector<Node *> &v) {
     mainChain = winners;
     
     std::vector<int> order = makeOrder(winners.size());
+
+    Node *toInsert = winners[0]->losers.back();
+    mainChain.insert(mainChain.begin(), toInsert);
+    winners[0]->losers.pop_back();
     
-    for (size_t i = 0; i < winners.size(); i++) {
+    for (size_t i = 1; i < winners.size(); i++) {
         Node *toInsert = winners[order[i]]->losers.back();
         if (toInsert == nullptr)
             continue ;
         winners[order[i]]->losers.pop_back();
         std::vector<Node *>::iterator bound = mainChain.begin() + order[i] + i;
-        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNode);
+        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeVec);
         mainChain.insert(pos, toInsert);
     }
 
     if (hasStraggler) {
-        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNode);
+        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNodeVec);
         mainChain.insert(pos, straggler);
     }
     v = mainChain;
@@ -138,9 +153,11 @@ void sortInternal(std::list<Node *> &l) {
         if (*a < *b) {
             b->losers.push_back(a);
             winners.push_back(b);
+            listCount++;
         } else {
             a->losers.push_back(b);
             winners.push_back(a);
+            listCount++;
         }
     }
     sortInternal(winners);
@@ -148,18 +165,22 @@ void sortInternal(std::list<Node *> &l) {
 
     std::vector<int> order = makeOrder(winners.size());
 
-    for (size_t i = 0; i < winners.size(); i++) {
+    Node *toInsert = (*winners.begin())->losers.back();
+    mainChain.insert(mainChain.begin(), toInsert);
+    (*winners.begin())->losers.pop_back();
+
+    for (size_t i = 1; i < winners.size(); i++) {
         std::list<Node *>::iterator winnerIt = std::next(winners.begin(), order[i]);
         if ((*winnerIt)->losers.empty())
             continue ;
         Node *toInsert = (*winnerIt)->losers.back();
         (*winnerIt)->losers.pop_back();
-        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), std::next(mainChain.begin(), order[i] + i), toInsert, cmpNode);
+        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), std::next(mainChain.begin(), order[i] + i), toInsert, cmpNodeList);
         mainChain.insert(pos, toInsert);
     }
 
     if (hasStraggler) {
-        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNode);
+        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNodeList);
         mainChain.insert(pos, straggler);
     }
     l = mainChain;
@@ -193,14 +214,19 @@ void PmergeMe(const int *arr, const size_t size) {
     unsigned long listEnd = getTime();
     std::cout << "After: ";
     printData(l.begin(), l.end());
+    // printData(l.begin(), l.end()); // これ消す
+    
+
     std::cout << "Time to process a range of " << size 
         <<  " elements with std::vector : " 
         << vecEnd - vecStart 
         <<" us" << std::endl;
     std::cout << "Time to process a range of " << size 
-        <<  " elements with std::list : " 
+        <<  " elements with std::list   : " 
         << listEnd - listStart 
         <<" us" << std::endl;
+    std::cout << "vector count : " << vecCount << std::endl;
+    std::cout << "list   count : " << listCount << std::endl;
 }
 
 /*

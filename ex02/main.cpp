@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 12:34:48 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/13 07:33:33 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 08:11:57 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ int main(int argc, char *argv[]) {
         for (size_t i = 0; i < size; i++) {
             if ((arr[i] = ft_stoi(argv[i + 1])) <= 0)
                 throw std::runtime_error("Error");
+            for (size_t j = 0; j < i; j++)
+                if (arr[i] == arr[j])
+                    throw std::runtime_error("Error: duplicate.");
         }
         PmergeMe(arr, size);
         return (EXIT_SUCCESS);

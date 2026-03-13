@@ -6,14 +6,14 @@
 #    By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/07 13:55:03 by kaisuzuk          #+#    #+#              #
-#    Updated: 2026/03/14 05:21:41 by kaisuzuk         ###   ########.fr        #
+#    Updated: 2026/03/14 05:36:05 by kaisuzuk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME	=	PmergeMe
 CXX		=	c++
-CXXFLAG	=	-Wall -Werror -Wextra -std=c++98
+CXXFLAG	=	-Wall -Werror -Wextra -std=c++98 -g -fsanitize=address
 
 SRCS	=	main.cpp \
 			PmergeMe.cpp
