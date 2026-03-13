@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 09:19:40 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 05:23:47 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 08:31:14 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,6 @@ int main(int argc, char *argv[]) {
         res = rpn(expr);
         std::cout << res << std::endl;    
     } catch (std::exception &e) {
-        std::cout << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
     }
 }

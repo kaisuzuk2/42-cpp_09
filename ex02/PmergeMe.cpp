@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 08:22:18 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 08:27:08 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,6 @@ void PmergeMe(const int *arr, const size_t size) {
     unsigned long listEnd = getTime();
     std::cout << "After: ";
     printData(l.begin(), l.end());
-    // printData(l.begin(), l.end()); // これ消す
     
 
     std::cout << "Time to process a range of " << size 
@@ -225,8 +224,8 @@ void PmergeMe(const int *arr, const size_t size) {
         <<  " elements with std::list   : " 
         << listEnd - listStart 
         <<" us" << std::endl;
-    std::cout << "vector count : " << vecCount << std::endl;
-    std::cout << "list   count : " << listCount << std::endl;
+    // std::cout << "vector count : " << vecCount << std::endl;
+    // std::cout << "list   count : " << listCount << std::endl;
 }
 
 /*

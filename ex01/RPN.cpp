@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 07:49:51 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/12 11:11:59 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 08:32:00 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static long int safe_sub(long int a, long int b) {
 
 static long int safe_div(long int a, long int b) {
     if (b == 0)
-        throw std::runtime_error("Error");
+        throw std::runtime_error("Error: zero div");
     if (a == std::numeric_limits<long>::min() && b == -1)
         throw std::runtime_error("Error: over flow");
     return (a / b);

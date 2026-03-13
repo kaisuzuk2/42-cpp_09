@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:34 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 05:22:25 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 08:29:52 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,15 @@ bool BitcoinExchange::_parseValue(const std::string &s, double &out) const {
 
 	out = std::strtod(s.c_str(), &endptr);
 	if (endptr == s.c_str() || *endptr != '\0' || std::isnan(out)) {
-		std::cerr << "Error: not a number." << std::endl;
+		std::cout << "Error: not a number." << std::endl;
 		return (false);
 	}
 	if (out < 0) {
-		std::cerr << "Error: not a positive number." << std::endl;
+		std::cout << "Error: not a positive number." << std::endl;
 		return (false);
 	}
 	if (out > kMaxVal) {
-		std::cerr << "Error: too large a number." << std::endl;
+		std::cout << "Error: too large a number." << std::endl;
 		return (false);
 	}
 	return (true);
@@ -137,11 +137,11 @@ void BitcoinExchange::_executeLine(const std::string &input) const {
 	if (trim_input.empty())
 		return ;
 	if (!this->_splitByBar(trim_input, date, val_str)) {
-		std::cerr << "Error: bad input => " << input << std::endl;
+		std::cout << "Error: bad input => " << input << std::endl;
 		return ;
 	}
 	if (!this->_parseDate(date)) {
-		std::cerr << "Error: bad input => " << input << std::endl;
+		std::cout << "Error: bad input => " << input << std::endl;
 		return ; 
 	}
 	if (!this->_parseValue(val_str, val))
@@ -153,7 +153,7 @@ void BitcoinExchange::_executeLine(const std::string &input) const {
 		return ;
 	}
 	if (it == this->_map.begin()) {
-		std::cerr << "Error: bad input => " << input << std::endl;
+		std::cout << "Error: bad input => " << input << std::endl;
 		return ;
 	}
 	--it;
