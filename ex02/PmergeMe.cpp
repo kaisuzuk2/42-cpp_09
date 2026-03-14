@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 09:31:29 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 16:24:29 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,10 @@ void sortInternal(std::vector<Node *> &v) {
     winners[0]->losers.pop_back();
     
     for (size_t i = 1; i < winners.size(); i++) {
-        Node *toInsert = winners[order[i]]->losers.back();
-        if (toInsert == nullptr)
+        Node *toInsert = NULL;
+        if (!winners[order[i]]->losers.empty())
+            toInsert = winners[order[i]]->losers.back();
+        if (!toInsert)
             continue ;
         winners[order[i]]->losers.pop_back();
         std::vector<Node *>::iterator bound = mainChain.begin() + order[i] + i;
@@ -170,12 +172,15 @@ void sortInternal(std::list<Node *> &l) {
     (*winners.begin())->losers.pop_back();
 
     for (size_t i = 1; i < winners.size(); i++) {
-        std::list<Node *>::iterator winnerIt = std::next(winners.begin(), order[i]);
+        std::list<Node *>::iterator winnerIt = winners.begin();
+        std::advance(winnerIt, order[i]);
         if ((*winnerIt)->losers.empty())
             continue ;
         Node *toInsert = (*winnerIt)->losers.back();
         (*winnerIt)->losers.pop_back();
-        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), std::next(mainChain.begin(), order[i] + i), toInsert, cmpNodeList);
+        std::list<Node *>::iterator bound = mainChain.begin();
+        std::advance(bound, order[i] + i);
+        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeList);
         mainChain.insert(pos, toInsert);
     }
 
@@ -212,7 +217,7 @@ void PmergeMe(const int *arr, const size_t size) {
     unsigned long listStart = getTime();
     sort(l);
     unsigned long listEnd = getTime();
-    std::cout << "After: ";
+    std::cout << "After : ";
     printData(l.begin(), l.end());
     
 

@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 12:33:27 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/13 09:00:07 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 16:12:41 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <exception>
 #include <sys/time.h>
+#include <cerrno>
 
 struct Node {
     int value;

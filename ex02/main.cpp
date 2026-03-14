@@ -6,11 +6,20 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 12:34:48 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 08:11:57 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 16:23:19 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
+
+/*
+[usage]
+
+./PmergeMe `shuf -i 1-100000 -n 21 | sort -u | tr "\n" " "`
+
+
+
+*/
 
 int ft_stoi(char *str) {
     char *endptr;
