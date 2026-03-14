@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 08:27:08 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 09:31:29 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,3 +245,5 @@ void PmergeMe(const int *arr, const size_t size) {
 1 2 4 
     3
 */
+
+// 0 1 1 3 5 
