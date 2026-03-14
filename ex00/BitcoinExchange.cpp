@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:34 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 08:29:52 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 16:08:56 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ const char *BitcoinExchange::InvalidHeaderException::what() const throw() {
 
 void BitcoinExchange::_loadDatabase(const std::string &name) {
 	std::string s;
-	std::ifstream ifs(name);
+	std::ifstream ifs(name.c_str());
 
 	if (!ifs.is_open()) 
 		throw std::runtime_error("Error: could not open database file.");
@@ -163,7 +163,7 @@ void BitcoinExchange::_executeLine(const std::string &input) const {
 void BitcoinExchange::_run(const std::string &filename) const {
 	std::string s;
 
-	std::ifstream ifs(filename);
+	std::ifstream ifs(filename.c_str());
 	if (!ifs.is_open())
 		throw std::runtime_error("Error: could not open user file.");
 	

@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:30 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/04 10:21:58 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/14 16:08:31 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <cmath>
 #include <cstring>
 #include <iostream>
+#include <cstdlib>
 
 class BitcoinExchange {
 	private:
