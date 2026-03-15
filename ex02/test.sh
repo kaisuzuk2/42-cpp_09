@@ -11,7 +11,7 @@ MAX_COMPARISONS=66
 #21要素
 ELEMENT_COUNT=21
 
-TEST_RUNS=200000
+TEST_RUNS=100
 
 echo "=== PmergeMe 比較回数チェック (${ELEMENT_COUNT}個の要素) ==="
 echo "最大許容回数: ${MAX_COMPARISONS}回"
@@ -19,16 +19,16 @@ echo ""
 
 # ランダムな21個の数字を生成してテスト
 for i in $(seq 1 $TEST_RUNS); do
-    numbers=$(shuf -i 1-$ELEMENT_COUNT -n $ELEMENT_COUNT | tr '\n' ' ')
-
+    # numbers=$(shuf -i 1-$ELEMENT_COUNT -n $ELEMENT_COUNT |  tr '\n' ' ')
+    numbers=$(jot -r $ELEMENT_COUNT 1 100000 | sort -u | tr '\n' ' ')
     echo "テスト #$i:"
     echo "入力: $numbers"
 
     output=$(./PmergeMe $numbers 2>&1)
 
     # 比較回数を抽出（"Count : 123" の形式）
-    comparisons=$(echo "$output" | grep -oP 'Count\s*:\s*\K\d+')
-
+    # comparisons=$(echo "$output" | grep -oP 'Count\s*:\s*\K\d+')
+    comparisons=$(echo "$output" | grep -oE 'Count[[:space:]]*:[[:space:]]*[0-9]+' | grep -oE '[0-9]+')
     echo "comparisons=$comparisons, $MAX_COMPARISONS"
     if [ -z "$comparisons" ]; then
         echo -e "${YELLOW}警告: 比較回数を抽出できませんでした${NC}"

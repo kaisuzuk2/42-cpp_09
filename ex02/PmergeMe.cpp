@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 16:24:29 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/15 11:27:57 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,12 @@ std::vector<int> makeOrder(size_t size) {
             order.push_back(idx - 1);
         k++;
     }
-    for (size_t i = order.size(); i < size; i++) 
-        order.push_back(i);
+    size_t start = order.size();
+    size_t end = size;
+    while (end > start) {
+        order.push_back(end - 1);
+        end--;
+    }
     return (order);
 }
 
@@ -92,14 +96,22 @@ void sortInternal(std::vector<Node *> &v) {
     mainChain.insert(mainChain.begin(), toInsert);
     winners[0]->losers.pop_back();
     
+    // for (size_t i = 1; i < winners.size(); i++) {
+    //     Node *toInsert = NULL;
+    //     if (!winners[order[i]]->losers.empty())
+    //         toInsert = winners[order[i]]->losers.back();
+    //     if (!toInsert)
+    //         continue ;
+    //     winners[order[i]]->losers.pop_back();
+    //     std::vector<Node *>::iterator bound = mainChain.begin() + order[i] + i;
+    //     std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeVec);
+    //     mainChain.insert(pos, toInsert);
+    // }
+
     for (size_t i = 1; i < winners.size(); i++) {
-        Node *toInsert = NULL;
-        if (!winners[order[i]]->losers.empty())
-            toInsert = winners[order[i]]->losers.back();
-        if (!toInsert)
-            continue ;
+        Node *toInsert = winners[order[i]]->losers.back();
         winners[order[i]]->losers.pop_back();
-        std::vector<Node *>::iterator bound = mainChain.begin() + order[i] + i;
+        std::vector<Node *>::iterator bound = std::find(mainChain.begin(), mainChain.end(), winners[order[i]]);
         std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeVec);
         mainChain.insert(pos, toInsert);
     }
@@ -174,12 +186,9 @@ void sortInternal(std::list<Node *> &l) {
     for (size_t i = 1; i < winners.size(); i++) {
         std::list<Node *>::iterator winnerIt = winners.begin();
         std::advance(winnerIt, order[i]);
-        if ((*winnerIt)->losers.empty())
-            continue ;
         Node *toInsert = (*winnerIt)->losers.back();
         (*winnerIt)->losers.pop_back();
-        std::list<Node *>::iterator bound = mainChain.begin();
-        std::advance(bound, order[i] + i);
+        std::list<Node *>::iterator bound = std::find(mainChain.begin(), mainChain.end(), *winnerIt);
         std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeList);
         mainChain.insert(pos, toInsert);
     }
@@ -229,8 +238,8 @@ void PmergeMe(const int *arr, const size_t size) {
         <<  " elements with std::list   : " 
         << listEnd - listStart 
         <<" us" << std::endl;
-    // std::cout << "vector count : " << vecCount << std::endl;
-    // std::cout << "list   count : " << listCount << std::endl;
+    std::cout << "vector count : " << vecCount << std::endl;
+    std::cout << "list   count : " << listCount << std::endl;
 }
 
 /*
