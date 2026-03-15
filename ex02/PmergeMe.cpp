@@ -6,11 +6,17 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/15 11:27:57 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/15 11:33:01 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
+
+Node::Node(int v): value(v) {}
+
+bool Node::operator<(const Node &other) {
+    return (this->value < other.value);
+}
 
 unsigned long getTime() {
     timeval t;
@@ -95,18 +101,6 @@ void sortInternal(std::vector<Node *> &v) {
     Node *toInsert = winners[0]->losers.back();
     mainChain.insert(mainChain.begin(), toInsert);
     winners[0]->losers.pop_back();
-    
-    // for (size_t i = 1; i < winners.size(); i++) {
-    //     Node *toInsert = NULL;
-    //     if (!winners[order[i]]->losers.empty())
-    //         toInsert = winners[order[i]]->losers.back();
-    //     if (!toInsert)
-    //         continue ;
-    //     winners[order[i]]->losers.pop_back();
-    //     std::vector<Node *>::iterator bound = mainChain.begin() + order[i] + i;
-    //     std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeVec);
-    //     mainChain.insert(pos, toInsert);
-    // }
 
     for (size_t i = 1; i < winners.size(); i++) {
         Node *toInsert = winners[order[i]]->losers.back();
@@ -228,7 +222,6 @@ void PmergeMe(const int *arr, const size_t size) {
     unsigned long listEnd = getTime();
     std::cout << "After : ";
     printData(l.begin(), l.end());
-    
 
     std::cout << "Time to process a range of " << size 
         <<  " elements with std::vector : " 

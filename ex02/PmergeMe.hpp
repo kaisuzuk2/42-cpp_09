@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 12:33:27 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 16:12:41 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/15 11:33:18 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,8 @@ struct Node {
     int value;
     std::vector<Node *> losers;
 
-    Node(int v): value(v) {}
-    bool operator<(const Node &other) {
-        return (this->value < other.value);
-    }
+    Node(int v);
+    bool operator<(const Node &other);
 };
 
 void PmergeMe(const int *arr, const size_t size);
