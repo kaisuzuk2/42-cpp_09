@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/17 12:38:41 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/17 12:52:19 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,8 +252,8 @@ void PmergeMe(const int *arr, const size_t size) {
         <<  " elements with std::list   : " 
         << listEnd - listStart 
         <<" us" << std::endl;
-    std::cout << "vector count : " << vecCount << std::endl;
-    std::cout << "list   count : " << listCount << std::endl;
+    // std::cout << "vector count : " << vecCount << std::endl;
+    // std::cout << "list   count : " << listCount << std::endl;
 }
 
 /*
