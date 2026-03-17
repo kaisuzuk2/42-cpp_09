@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 12:34:48 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/17 07:55:28 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/17 13:13:03 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 [usage]
 
 ./PmergeMe `shuf -i 1-21 -n 21 | tr "\n" " "`
-
-./PmergeMe `ruby -e 'puts (1..21).to_a.shuffle.join(" ")'`
 
 */
 
