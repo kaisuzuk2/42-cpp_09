@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:01:12 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/15 11:33:01 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/17 09:25:47 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ Node::Node(int v): value(v) {}
 bool Node::operator<(const Node &other) {
     return (this->value < other.value);
 }
+
+PendItem::PendItem(Node *n, Node *b): node(n), boundWinner(b) {}
 
 unsigned long getTime() {
     timeval t;
@@ -95,25 +97,57 @@ void sortInternal(std::vector<Node *> &v) {
 
     sortInternal(winners);
     mainChain = winners;
-    
-    std::vector<int> order = makeOrder(winners.size());
 
-    Node *toInsert = winners[0]->losers.back();
-    mainChain.insert(mainChain.begin(), toInsert);
+    std::vector<PendItem> pend;
+
+    pend.push_back(PendItem(winners[0]->losers.back(), winners[0]));
     winners[0]->losers.pop_back();
 
     for (size_t i = 1; i < winners.size(); i++) {
-        Node *toInsert = winners[order[i]]->losers.back();
-        winners[order[i]]->losers.pop_back();
-        std::vector<Node *>::iterator bound = std::find(mainChain.begin(), mainChain.end(), winners[order[i]]);
-        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeVec);
-        mainChain.insert(pos, toInsert);
+        pend.push_back(PendItem(winners[i]->losers.back(), winners[i]));
+        winners[i]->losers.pop_back();
+    }
+    if (hasStraggler)
+        pend.push_back(PendItem(straggler, NULL));
+
+    std::vector<int> order = makeOrder(pend.size());
+
+    mainChain.insert(mainChain.begin(), pend[0].node);
+
+    for (size_t i = 1; i < order.size(); i++) {
+        PendItem &item = pend[order[i]];
+
+        std::vector<Node *>::iterator bound;
+        if (item.boundWinner == NULL)
+            bound = mainChain.end();
+        else
+            bound = std::find(mainChain.begin(), mainChain.end(), item.boundWinner);
+        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, item.node, cmpNodeVec);
+        mainChain.insert(pos, item.node);
     }
 
-    if (hasStraggler) {
-        std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNodeVec);
-        mainChain.insert(pos, straggler);
-    }
+    
+    // std::vector<int> order = makeOrder(winners.size());
+
+    // Node *toInsert = winners[0]->losers.back();
+    // mainChain.insert(mainChain.begin(), toInsert);
+    // winners[0]->losers.pop_back();
+
+    // for (size_t i = 1; i < winners.size(); i++) {
+    //     Node *toInsert = winners[order[i]]->losers.back();
+    //     winners[order[i]]->losers.pop_back();
+    //     std::vector<Node *>::iterator bound = std::find(mainChain.begin(), mainChain.end(), winners[order[i]]);
+    //     std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeVec);
+    //     mainChain.insert(pos, toInsert);
+    // }
+
+    // if (hasStraggler) {
+    //     std::vector<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNodeVec);
+    //     mainChain.insert(pos, straggler);
+    // }
+
+
+
     v = mainChain;
 }
 
@@ -171,26 +205,56 @@ void sortInternal(std::list<Node *> &l) {
     sortInternal(winners);
     mainChain = winners;
 
-    std::vector<int> order = makeOrder(winners.size());
-
-    Node *toInsert = (*winners.begin())->losers.back();
-    mainChain.insert(mainChain.begin(), toInsert);
+    std::vector<PendItem> pend;
+    pend.push_back(PendItem((*winners.begin())->losers.back(), *winners.begin()));
     (*winners.begin())->losers.pop_back();
 
-    for (size_t i = 1; i < winners.size(); i++) {
-        std::list<Node *>::iterator winnerIt = winners.begin();
-        std::advance(winnerIt, order[i]);
-        Node *toInsert = (*winnerIt)->losers.back();
+    std::list<Node *>::iterator winnerIt = winners.begin();
+    winnerIt++;
+    while (winnerIt != winners.end()) {
+        pend.push_back(PendItem((*winnerIt)->losers.back(), *winnerIt));
         (*winnerIt)->losers.pop_back();
-        std::list<Node *>::iterator bound = std::find(mainChain.begin(), mainChain.end(), *winnerIt);
-        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeList);
-        mainChain.insert(pos, toInsert);
+        winnerIt++;
+    }
+    if (hasStraggler) 
+        pend.push_back(PendItem(straggler, NULL));
+    
+    std::vector<int> order = makeOrder(pend.size());
+
+    mainChain.insert(mainChain.begin(), (*pend.begin()).node);
+
+    for (size_t i = 1; i < order.size(); i++) {
+        PendItem &item = pend[order[i]];
+        std::list<Node *>::iterator bound;
+        if (item.boundWinner == NULL)
+            bound = mainChain.end();
+        else
+            bound = std::find(mainChain.begin(), mainChain.end(), item.boundWinner);
+        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, item.node, cmpNodeList);
+        mainChain.insert(pos, item.node);
     }
 
-    if (hasStraggler) {
-        std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNodeList);
-        mainChain.insert(pos, straggler);
-    }
+    // std::vector<int> order = makeOrder(winners.size());
+
+    // Node *toInsert = (*winners.begin())->losers.back();
+    // mainChain.insert(mainChain.begin(), toInsert);
+    // (*winners.begin())->losers.pop_back();
+
+
+    // for (size_t i = 1; i < winners.size(); i++) {
+    //     std::list<Node *>::iterator winnerIt = winners.begin();
+    //     std::advance(winnerIt, order[i]);
+    //     Node *toInsert = (*winnerIt)->losers.back();
+    //     (*winnerIt)->losers.pop_back();
+    //     std::list<Node *>::iterator bound = std::find(mainChain.begin(), mainChain.end(), *winnerIt);
+    //     std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), bound, toInsert, cmpNodeList);
+    //     mainChain.insert(pos, toInsert);
+    // }
+
+    // if (hasStraggler) {
+    //     std::list<Node *>::iterator pos = std::lower_bound(mainChain.begin(), mainChain.end(), straggler, cmpNodeList);
+    //     mainChain.insert(pos, straggler);
+    // }
     l = mainChain;
 }
 
@@ -221,7 +285,7 @@ void PmergeMe(const int *arr, const size_t size) {
     sort(l);
     unsigned long listEnd = getTime();
     std::cout << "After : ";
-    printData(l.begin(), l.end());
+    printData(v.begin(), v.end());
 
     std::cout << "Time to process a range of " << size 
         <<  " elements with std::vector : " 

@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 08:52:34 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/14 16:08:56 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/17 08:58:15 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ bool BitcoinExchange::_parseDate(const std::string &input) const {
 	int day;
 	struct tm t_date;
 
-	memset(&t_date, 0, sizeof(t_date));	
+	std::memset(&t_date, 0, sizeof(t_date));	
 	if (input.size() != 10) 
 		return (false);
 	if (input[4] != '-' || input[7] != '-') 

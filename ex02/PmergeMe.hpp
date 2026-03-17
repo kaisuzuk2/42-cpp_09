@@ -6,7 +6,7 @@
 /*   By: kaisuzuk <kaisuzuk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 12:33:27 by kaisuzuk          #+#    #+#             */
-/*   Updated: 2026/03/15 11:33:18 by kaisuzuk         ###   ########.fr       */
+/*   Updated: 2026/03/17 08:55:38 by kaisuzuk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ struct Node {
 
     Node(int v);
     bool operator<(const Node &other);
+};
+
+struct PendItem {
+    Node *node;
+    Node *boundWinner;
+
+    PendItem(Node *n, Node *b);
 };
 
 void PmergeMe(const int *arr, const size_t size);
